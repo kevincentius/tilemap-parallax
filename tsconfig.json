@@ -18,6 +18,11 @@
     "target": "ES2022",
     "module": "ES2022",
     "useDefineForClassFields": false,
+    "paths": {
+      "tilemap-parallax": [
+        "./dist/tilemap-parallax"
+      ]
+    },
     "lib": [
       "ES2022",
       "dom"
