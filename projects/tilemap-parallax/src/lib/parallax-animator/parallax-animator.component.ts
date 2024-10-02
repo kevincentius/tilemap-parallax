@@ -44,7 +44,7 @@ export class ParallaxAnimatorComponent implements OnInit, OnChanges {
   ngOnChanges(changes?: any) {
     this.advanceSpeed = this.config.slowAdvanceSpeed;
 
-    if (changes.parallaxProvider || changes.parallaxFolder) {
+    if (changes?.parallaxProvider || changes?.parallaxFolder) {
       if (this.parallaxFolder) {
         this.parallaxProvider = new DefaultParallaxProvider(this.parallaxFolder);
         this.parallax.setParallaxProvider(this.parallaxProvider);
@@ -57,7 +57,7 @@ export class ParallaxAnimatorComponent implements OnInit, OnChanges {
       }
     }
 
-    if (changes.animate) {
+    if (changes == undefined || changes.animate) {
       clearTimeout(this.timeout);
       if (this.animate) {
         this.lastMs = Date.now();
