@@ -1,7 +1,7 @@
-import { Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { ParallaxData, ParallaxLayerData } from '../parallax-data/parallax-data';
 import { CommonModule } from '@angular/common';
-import { ImgSrcProvider, TilesetProvider } from '../parallax-data/resource-provider';
+import { ParallaxProvider } from '../parallax-data/parallax-provider';
 import { ParallaxLayerGenConfig } from '../parallax-data/parallax-layer-gen';
 import { drawTilemap } from '../parallax-data/tilemap-gen';
 
@@ -21,8 +21,7 @@ export interface ParallaxLayer {
 })
 export class ParallaxBackgroundComponent {
 
-  @Input() tilesetProvider!: TilesetProvider;
-  @Input() imgSrcProvider!: ImgSrcProvider;
+  parallaxProvider!: ParallaxProvider;
 
   layers: ParallaxLayer[] = [];
 
@@ -33,7 +32,15 @@ export class ParallaxBackgroundComponent {
 
   layerStyle?: object;
 
-  async setParallax(parallaxData: ParallaxData) {
+  setParallaxProvider(parallaxProvider: ParallaxProvider) {
+    this.parallaxProvider = parallaxProvider;
+  }
+
+  async setParallax(parallaxId: string) {
+    this.setParallaxData(await this.parallaxProvider.getParallaxData(parallaxId));
+  }
+
+  async setParallaxData(parallaxData: ParallaxData) {
     this.layers = await Promise.all(parallaxData.layers.map(async l => ({
       data: l,
       offset: 0,
@@ -42,10 +49,10 @@ export class ParallaxBackgroundComponent {
     })));
   }
 
-  async generateLayerImage(gen: ParallaxLayerGenConfig): Promise<string> {
+  private async generateLayerImage(gen: ParallaxLayerGenConfig): Promise<string> {
     const canvas = document.createElement('canvas');
-    const tileset = this.tilesetProvider.getTileset(gen.tileset);
-    const imgSrc = this.imgSrcProvider.getSrc(tileset.spritesheet.path);
+    const tileset = await this.parallaxProvider.getTileset(gen.tileset);
+    const imgSrc = this.parallaxProvider.getSrc(tileset.spritesheet.path);
     await drawTilemap(tileset, gen.groundGen, canvas, imgSrc);
     return canvas.toDataURL();
   }

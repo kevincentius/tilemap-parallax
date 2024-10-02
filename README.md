@@ -7,3 +7,4 @@ How to republish:
 - npx ng build tilemap-parallax
 - cd dist/tilemap-parallax
 - npm publish
+- cd ../..
