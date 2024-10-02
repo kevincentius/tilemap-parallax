@@ -41,24 +41,28 @@ export class ParallaxAnimatorComponent implements OnInit, OnChanges {
     clearTimeout(this.timeout);
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes?: any) {
     this.advanceSpeed = this.config.slowAdvanceSpeed;
 
-    if (this.parallaxFolder) {
-      this.parallaxProvider = new DefaultParallaxProvider(this.parallaxFolder);
-      this.parallax.setParallaxProvider(this.parallaxProvider);
+    if (changes.parallaxProvider || changes.parallaxFolder) {
+      if (this.parallaxFolder) {
+        this.parallaxProvider = new DefaultParallaxProvider(this.parallaxFolder);
+        this.parallax.setParallaxProvider(this.parallaxProvider);
 
-      if (this.parallaxRelPath) {
-        this.parallax.setParallax(this.parallaxRelPath);
+        if (this.parallaxRelPath) {
+          this.parallax.setParallax(this.parallaxRelPath);
+        }
+      } else if (this.parallaxProvider) {
+        this.parallax.setParallaxProvider(this.parallaxProvider);
       }
-    } else if (this.parallaxProvider) {
-      this.parallax.setParallaxProvider(this.parallaxProvider);
     }
 
-    clearTimeout(this.timeout);
-    if (this.animate) {
-      this.lastMs = Date.now();
-      this.loop();
+    if (changes.animate) {
+      clearTimeout(this.timeout);
+      if (this.animate) {
+        this.lastMs = Date.now();
+        this.loop();
+      }
     }
   }
 
@@ -66,7 +70,7 @@ export class ParallaxAnimatorComponent implements OnInit, OnChanges {
     this.parallax.setParallaxData(parallax);
   }
 
-  advanceFastForSecs(secs: number) {
+  advanceForSeconds(secs: number) {
     this.fastAdvanceMsLeft = secs * 1000;
   }
 

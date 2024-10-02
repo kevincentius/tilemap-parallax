@@ -1,24 +1,23 @@
-# TilemapParallax
+# Usage In Angular
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.0.
+Extract the exported ZIP file obtained from the parallax editor tool somewhere in your `/assets` folder and use the ParallaxAnimatorComponent, for example:
 
-## Code scaffolding
+```
+  <div class="fixed-background">
+    <app-parallax-animator
+      #parallaxAnimator
+      [parallaxFolder]="'assets/my-folder'"
+      [parallaxRelPath]="'parallax/jungle.json'"
+      [config]="config"
+      [animate]="animate"
+    ></app-parallax-animator>
+  </div>
+```
 
-Run `ng generate component component-name --project tilemap-parallax` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project tilemap-parallax`.
-> Note: Don't forget to add `--project tilemap-parallax` or else it will be added to the default project in your `angular.json` file. 
+## Inputs
 
-## Build
+- `resourceFolder` - required, URL to the extracted folder.
+- `parallax` - optional, relative path to the parallax JSON file found in the extracted folder. If not present, no parallax will be displayed.
+- `config` - optional, configure the speed and acceleration of the parallax motion. If not present, a default config will be used.
+- `animate` - optional, if false, then the parallax will not move automatically. The movement can be controlled via methods (advance and advanceForSeconds). Defaults to true.
 
-Run `ng build tilemap-parallax` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Publishing
-
-After building your library with `ng build tilemap-parallax`, go to the dist folder `cd dist/tilemap-parallax` and run `npm publish`.
-
-## Running unit tests
-
-Run `ng test tilemap-parallax` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
