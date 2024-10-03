@@ -1,20 +1,35 @@
-# Usage In Angular
+# Tilemap Parallax
+
+This library provides a component that can animate a parallax background created by the visual tool.
+
+## Usage
 
 Extract the exported ZIP file obtained from the parallax editor tool somewhere in your `/assets` folder and use the ParallaxAnimatorComponent, for example:
 
 ```
-  <div class="fixed-background">
-    <app-parallax-animator
-      #parallaxAnimator
-      [parallaxFolder]="'assets/my-folder'"
-      [parallaxRelPath]="'parallax/jungle.json'"
-      [config]="config"
-      [animate]="animate"
-    ></app-parallax-animator>
-  </div>
+<div class="fixed-background">
+  <app-parallax-animator
+    #parallaxAnimator
+    [parallaxFolder]="'assets/my-folder'"
+    [parallaxRelPath]="'parallax/jungle.json'"
+    [config]="config"
+    [animate]="animate"
+  ></app-parallax-animator>
+</div>
 ```
 
-## Inputs
+```
+// CSS to make the element full size (if desired):
+.fixed-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+```
+### Inputs
 
 - `resourceFolder` - required, URL to the extracted folder.
 - `parallax` - optional, relative path to the parallax JSON file found in the extracted folder. If not present, no parallax will be displayed.

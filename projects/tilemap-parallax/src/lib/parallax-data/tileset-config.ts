@@ -19,4 +19,5 @@ export enum TilePosType {
   BELOW_TOP_LEFT = 3,
   INSIDE = 4,
   BELOW_TOP_RIGHT = 5,
+  DECOR = 6,
 }
