@@ -3,7 +3,7 @@ import { TilePosType, TilesetConfig } from "./tileset-config";
 
 function generateTilePosTypeMap(groundCfg: GroundConfig): (TilePosType | null)[][] {
   const ground = generateGround(groundCfg);
-  const map = new Array(Math.max(1, groundCfg.amp + groundCfg.base + 1)).fill(0)
+  const map: (TilePosType | null)[][] = new Array(Math.max(2, groundCfg.amp + groundCfg.base + 2)).fill(0)
     .map((_, i) => new Array(ground.length).fill(0)
       .map((_, j) => {
         const groundLevel = ground[j];
@@ -28,22 +28,40 @@ function generateTilePosTypeMap(groundCfg: GroundConfig): (TilePosType | null)[]
           return TilePosType.INSIDE;
         }
       }));
-
+  
   // flip vertically
   map.reverse();
+
+  // put decor tiles
+  for (let j = 0; j < ground.length; j++) {
+    for (let i = 1; i < map.length; i++) {
+      if (map[i][j] === TilePosType.TOP) {
+        map[i - 1][j] = TilePosType.DECOR;
+      }
+    }
+  }
+
   return map;
 }
 
 export function generateTilemap(tilesetCfg: TilesetConfig, groundCfg: GroundConfig) {
-  const tilePickerMap = new Map<TilePosType, { i: number, j: number }[]>();
+  const tilePickerMap = new Map<TilePosType, {
+    tiles: { i: number, j: number, weight: number }[],
+    weightSum: number,
+  }>();
   tilesetCfg.spritesheet.tiles.forEach((row, i) => {
     row.forEach((tile, j) => {
+      const tileEntry = { i, j, weight: tile.weight ?? 100 };
       tile.posTypes.forEach(posType => {
-        const pos = { i, j };
         if (tilePickerMap.has(posType)) {
-          tilePickerMap.get(posType)!.push(pos);
+          const entry = tilePickerMap.get(posType)!;
+          entry.weightSum += tileEntry.weight;
+          entry.tiles.push(tileEntry);
         } else {
-          tilePickerMap.set(posType, [pos]);
+          tilePickerMap.set(posType, {
+            tiles: [ tileEntry ],
+            weightSum: tileEntry.weight,
+          });
         }
       });
     });
@@ -52,8 +70,21 @@ export function generateTilemap(tilesetCfg: TilesetConfig, groundCfg: GroundConf
   const typeMap = generateTilePosTypeMap(groundCfg);
   return typeMap.map((row, i) => row.map((type, j) => {
     if (type === null) return null;
-    const tilePoses = tilePickerMap.get(type) ?? [{ i: 0, j: 0 }];
-    return tilePoses[Math.floor(Math.random() * tilePoses.length)];
+    if (type === TilePosType.DECOR && Math.random() > tilesetCfg.spritesheet.decorDensity) return null;
+
+    const entry = tilePickerMap.get(type);
+    if (!entry) {
+      return { i: 0, j: 0 };
+    }
+
+    let p = Math.random() * entry.weightSum;
+    for (let tile of entry.tiles) {
+      p -= tile.weight;
+      if (p <= 0) return { i: tile.i, j: tile.j };
+    }
+
+    console.error("Should not reach here");
+    return { i: 0, j: 0 };
   }));
 }
 

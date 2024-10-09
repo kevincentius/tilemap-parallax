@@ -9,6 +9,7 @@ export interface TilesetConfig {
     tileHeight: number;
     scale: number;
     tiles: TileConfig[][];
+    decorDensity: number;
   };
 }
 
