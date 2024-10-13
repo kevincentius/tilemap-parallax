@@ -41,20 +41,23 @@ export class ParallaxAnimatorComponent implements OnInit, OnChanges {
     clearTimeout(this.timeout);
   }
 
-  ngOnChanges(changes?: any) {
+  ngOnChanges(changesAny?: any) {
+    // changes is not really ParallaxAnimatorComponent, but only the @Input()s. But this provides a little type safety anyways.
+    const changes = changesAny as ParallaxAnimatorComponent;
+
     this.advanceSpeed = this.config.slowAdvanceSpeed;
 
     if (changes?.parallaxProvider || changes?.parallaxFolder) {
       if (this.parallaxFolder) {
         this.parallaxProvider = new DefaultParallaxProvider(this.parallaxFolder);
         this.parallax.setParallaxProvider(this.parallaxProvider);
-
-        if (this.parallaxRelPath) {
-          this.parallax.setParallax(this.parallaxRelPath);
-        }
       } else if (this.parallaxProvider) {
         this.parallax.setParallaxProvider(this.parallaxProvider);
       }
+    }
+
+    if (changes?.parallaxProvider || changes?.parallaxFolder || changes?.parallaxRelPath) {
+      this.parallax.setParallax(this.parallaxRelPath);
     }
 
     if (changes == undefined || changes.animate) {

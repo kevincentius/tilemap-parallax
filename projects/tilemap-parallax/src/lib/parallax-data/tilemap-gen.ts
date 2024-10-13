@@ -71,8 +71,9 @@ export function generateTilemap(tilesetCfg: TilesetConfig, groundCfg: GroundConf
   return typeMap.map((row, i) => row.map((type, j) => {
     if (type === null) return null;
     if (type === TilePosType.DECOR && Math.random() > tilesetCfg.spritesheet.decorDensity) return null;
-
+    
     const entry = tilePickerMap.get(type);
+    if (type === TilePosType.DECOR && ((entry?.tiles?.length ?? 0) == 0)) { return null; }
     if (!entry) {
       return { i: 0, j: 0 };
     }

@@ -36,11 +36,16 @@ export class ParallaxBackgroundComponent {
     this.parallaxProvider = parallaxProvider;
   }
 
-  async setParallax(parallaxId: string) {
-    this.setParallaxData(await this.parallaxProvider.getParallaxData(parallaxId));
+  async setParallax(parallaxId: string | undefined) {
+    this.setParallaxData(parallaxId ? await this.parallaxProvider.getParallaxData(parallaxId) : undefined);
   }
 
-  async setParallaxData(parallaxData: ParallaxData) {
+  async setParallaxData(parallaxData: ParallaxData | undefined) {
+    if (!parallaxData) {
+      this.layers = [];
+      return
+    }
+    
     this.layers = await Promise.all(parallaxData.layers.map(async l => ({
       data: l,
       offset: 0,
