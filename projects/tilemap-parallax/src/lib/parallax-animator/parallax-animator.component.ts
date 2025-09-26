@@ -7,15 +7,13 @@ import { DefaultParallaxProvider } from '../parallax-data/default-parallax-provi
 import { defaultParallaxAnimatorConfig } from '../parallax-data/parallax-animator-config';
 
 @Component({
-  selector: 'app-parallax-animator',
-  standalone: true,
-  imports: [
-    CommonModule,
-
-    ParallaxBackgroundComponent,
-  ],
-  templateUrl: './parallax-animator.component.html',
-  styleUrls: ['./parallax-animator.component.scss']
+    selector: 'app-parallax-animator',
+    imports: [
+        CommonModule,
+        ParallaxBackgroundComponent,
+    ],
+    templateUrl: './parallax-animator.component.html',
+    styleUrls: ['./parallax-animator.component.scss']
 })
 export class ParallaxAnimatorComponent implements OnInit, OnChanges {
 

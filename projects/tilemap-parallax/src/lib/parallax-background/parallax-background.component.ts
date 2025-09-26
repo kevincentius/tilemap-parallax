@@ -13,11 +13,10 @@ export interface ParallaxLayer {
 }
 
 @Component({
-  selector: 'app-parallax-background',
-  standalone: true,
-  imports: [ CommonModule, ],
-  templateUrl: './parallax-background.component.html',
-  styleUrls: ['./parallax-background.component.scss']
+    selector: 'app-parallax-background',
+    imports: [CommonModule,],
+    templateUrl: './parallax-background.component.html',
+    styleUrls: ['./parallax-background.component.scss']
 })
 export class ParallaxBackgroundComponent {
 
